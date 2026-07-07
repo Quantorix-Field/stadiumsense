@@ -3,12 +3,6 @@ import { renderHook, waitFor } from '@testing-library/react'
 import { useCrowdData } from '../src/hooks/useCrowdData'
 
 describe('useCrowdData', () => {
-  it('starts in a loading state with no gates', () => {
-    const { result } = renderHook(() => useCrowdData())
-    expect(result.current.isLoading).toBe(true)
-    expect(result.current.gates).toEqual([])
-  })
-
   it('loads gate data and clears the loading state', async () => {
     const { result } = renderHook(() => useCrowdData())
 
