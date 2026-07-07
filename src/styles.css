@@ -1,0 +1,374 @@
+:root {
+  --color-bg: #0f1420;
+  --color-surface: #1a2133;
+  --color-surface-raised: #232c42;
+  --color-text: #eef1f6;
+  --color-text-muted: #a7b0c2;
+  --color-accent: #3d8bfd;
+  --color-border: #2e3750;
+  --radius: 10px;
+  --spacing-1: 0.5rem;
+  --spacing-2: 1rem;
+  --spacing-3: 1.5rem;
+  --spacing-4: 2rem;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.app-shell {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  min-height: 100vh;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.app-header p {
+  margin: 0.25rem 0 0;
+  color: var(--color-text-muted);
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.app-footer {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  text-align: center;
+  padding-top: var(--spacing-2);
+  border-top: 1px solid var(--color-border);
+}
+
+/* Error boundary */
+
+.error-boundary {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--spacing-3);
+  text-align: center;
+}
+
+.error-boundary button {
+  margin-top: var(--spacing-2);
+  background: var(--color-accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+}
+
+/* Chat assistant */
+
+.chat-assistant {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-1);
+}
+
+.chat-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.chat-log {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  min-height: 120px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: var(--spacing-1);
+}
+
+.chat-empty-state {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.chat-message {
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius);
+  max-width: 85%;
+}
+
+.chat-message p {
+  margin: 0;
+}
+
+.chat-message-user {
+  align-self: flex-end;
+  background: var(--color-accent);
+  color: white;
+}
+
+.chat-message-assistant {
+  align-self: flex-start;
+  background: var(--color-surface-raised);
+}
+
+.chat-timestamp {
+  display: block;
+  font-size: 0.7rem;
+  opacity: 0.7;
+  margin-top: 0.25rem;
+}
+
+.chat-typing-indicator {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.chat-error {
+  color: #ff8a80;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.chat-input-form {
+  display: flex;
+  gap: var(--spacing-1);
+}
+
+.chat-input-form input {
+  flex: 1;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.75rem;
+}
+
+.chat-input-form button {
+  background: var(--color-accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0 1.25rem;
+  cursor: pointer;
+}
+
+.chat-input-form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Language selector */
+
+.language-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.language-selector select {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+}
+
+/* Gate finder */
+
+.gate-finder {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--spacing-3);
+}
+
+.gate-finder-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-1);
+  margin-bottom: var(--spacing-2);
+}
+
+.gate-finder-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.gate-finder-filter {
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.gate-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.gate-card {
+  background: var(--color-surface-raised);
+  border-radius: var(--radius);
+  padding: var(--spacing-2);
+}
+
+.gate-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.gate-card-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  flex: 1;
+}
+
+.gate-rank {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.gate-badge {
+  font-size: 1.1rem;
+}
+
+.gate-card-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 0.5rem;
+}
+
+/* Crowd meter */
+
+.crowd-meter {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.crowd-meter-track {
+  flex: 1;
+  height: 8px;
+  background: var(--color-bg);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.crowd-meter-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.crowd-meter-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Accessibility panel */
+
+.accessibility-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--spacing-3);
+}
+
+.accessibility-panel h2 {
+  margin: 0 0 var(--spacing-1);
+  font-size: 1.15rem;
+}
+
+.accessibility-feature-list {
+  list-style: none;
+  margin: var(--spacing-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.accessibility-feature {
+  border-left: 3px solid var(--color-accent);
+  padding: 0.4rem 0.75rem;
+}
+
+.accessibility-feature h3 {
+  margin: 0 0 0.15rem;
+  font-size: 0.95rem;
+}
+
+.accessibility-feature p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
