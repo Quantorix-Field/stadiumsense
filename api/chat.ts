@@ -7,10 +7,19 @@ interface ChatMessage {
   timestamp: number
 }
 
+interface GateInfo {
+  name: string
+  crowdLevel: string
+  distanceMeters: number
+  estimatedWaitMinutes: number
+  wheelchairAccessible: boolean
+}
+
 interface ChatRequestBody {
   message: string
   language: string
   history: ChatMessage[]
+  gates?: GateInfo[]
 }
 
 const LANGUAGE_NAMES: Record<string, string> = {
@@ -24,9 +33,9 @@ const LANGUAGE_NAMES: Record<string, string> = {
 
 const SYSTEM_PROMPT = `You are StadiumSense, an on-site assistant for fans at FIFA World Cup 2026 stadiums.
 You help with navigation, gate wait times, accessibility options, transportation, and general
-event questions. Keep answers short (2-4 sentences), practical, and friendly. If you don't have
-real-time data for something, say so honestly rather than inventing specifics.`
-
+event questions. Keep answers short (2-4 sentences), practical, and friendly. When gate data is
+provided below, base your answer on those exact numbers rather than guessing. If you don't have
+real-time data for something outside the provided gates, say so honestly rather than inventing specifics.`
 const MAX_MESSAGE_LENGTH = 1000
 const MAX_HISTORY_MESSAGES = 10
 
@@ -58,6 +67,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const languageName = LANGUAGE_NAMES[body.language] ?? 'English'
   const recentHistory = (body.history ?? []).slice(-MAX_HISTORY_MESSAGES)
 
+  const gateContext =
+    body.gates && body.gates.length > 0
+      ? `\n\nCurrent gate conditions:\n${body.gates
+          .map(
+            (g) =>
+              `- ${g.name}: ${g.crowdLevel} crowd, ${g.estimatedWaitMinutes} min wait, ${g.distanceMeters}m away, ${g.wheelchairAccessible ? 'wheelchair accessible' : 'not wheelchair accessible'}`
+          )
+          .join('\n')}`
+      : ''
+
   const contents = [
     ...recentHistory.map((m) => ({
       role: m.role === 'assistant' ? 'model' : 'user',
@@ -75,7 +94,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         body: JSON.stringify({
           contents,
           systemInstruction: {
-            parts: [{ text: `${SYSTEM_PROMPT}\nRespond in ${languageName}.` }],
+            parts: [{ text: `${SYSTEM_PROMPT}\nRespond in ${languageName}.${gateContext}` }],
           },
           generationConfig: {
             maxOutputTokens: 300,
