@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import type { ChatMessage, SupportedLanguage } from '../types'
+import type { ChatMessage, Gate, SupportedLanguage } from '../types'
 import { sendChatMessage } from '../utils/api'
 
 interface UseChatResult {
@@ -8,7 +8,6 @@ interface UseChatResult {
   error: string | null
   sendMessage: (text: string) => Promise<void>
 }
-
 function createMessage(role: ChatMessage['role'], content: string): ChatMessage {
   return {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
@@ -23,7 +22,7 @@ function createMessage(role: ChatMessage['role'], content: string): ChatMessage 
  * error surfacing. Talks to the backend proxy via sendChatMessage rather than
  * any AI SDK directly, so the UI never knows or cares which model is behind it.
  */
-export function useChat(language: SupportedLanguage): UseChatResult {
+export function useChat(language: SupportedLanguage, gates: Gate[] = []): UseChatResult {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [isSending, setIsSending] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -39,7 +38,7 @@ export function useChat(language: SupportedLanguage): UseChatResult {
       setError(null)
 
       try {
-        const reply = await sendChatMessage(trimmed, language, messages)
+        const reply = await sendChatMessage(trimmed, language, messages, gates)
         setMessages((prev) => [...prev, createMessage('assistant', reply)])
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Something went wrong')
@@ -47,7 +46,7 @@ export function useChat(language: SupportedLanguage): UseChatResult {
         setIsSending(false)
       }
     },
-    [isSending, language, messages]
+    [isSending, language, messages, gates]
   )
 
   return { messages, isSending, error, sendMessage }
