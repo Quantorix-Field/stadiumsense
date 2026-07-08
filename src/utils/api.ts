@@ -1,4 +1,4 @@
-import type { ChatMessage, ChatRequestPayload, ChatResponsePayload, SupportedLanguage } from '../types'
+import type { ChatMessage, ChatRequestPayload, ChatResponsePayload, Gate, SupportedLanguage } from '../types'
 
 const CHAT_ENDPOINT = '/api/chat'
 
@@ -6,16 +6,18 @@ const CHAT_ENDPOINT = '/api/chat'
  * Sends a chat message through our serverless proxy rather than calling
  * Gemini directly from the browser. This keeps the API key server-side only
  * and lets us control rate limiting, prompt shaping, and error handling
- * in one place.
+ * in one place. Current gate conditions are included so the assistant's
+ * answers are grounded in real, live data rather than guesses.
  *
  * @throws Error with a user-facing message if the request fails
  */
 export async function sendChatMessage(
   message: string,
   language: SupportedLanguage,
-  history: ChatMessage[]
+  history: ChatMessage[],
+  gates: Gate[] = []
 ): Promise<string> {
-  const payload: ChatRequestPayload = { message, language, history }
+  const payload: ChatRequestPayload = { message, language, history, gates }
 
   let response: Response
   try {
