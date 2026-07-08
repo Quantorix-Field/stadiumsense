@@ -33,9 +33,11 @@ const LANGUAGE_NAMES: Record<string, string> = {
 
 const SYSTEM_PROMPT = `You are StadiumSense, an on-site assistant for fans at FIFA World Cup 2026 stadiums.
 You help with navigation, gate wait times, accessibility options, transportation, and general
-event questions. Keep answers short (2-4 sentences), practical, and friendly. When gate data is
-provided below, base your answer on those exact numbers rather than guessing. If you don't have
-real-time data for something outside the provided gates, say so honestly rather than inventing specifics.`
+event questions. Keep answers to 1-2 short sentences, practical and friendly, and always finish
+your sentence completely. Do not use markdown formatting like asterisks or bold text — respond in
+plain text only. When gate data is provided below, base your answer on those exact numbers rather
+than guessing. If you don't have real-time data for something outside the provided gates, say so
+honestly rather than inventing specifics.`
 const MAX_MESSAGE_LENGTH = 1000
 const MAX_HISTORY_MESSAGES = 10
 
@@ -110,7 +112,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const data = await geminiResponse.json()
     const rawReply: string | undefined = data?.candidates?.[0]?.content?.parts?.[0]?.text
-    const reply = rawReply?.replace(/\*\*(.+?)\*\*/g, '$1').replace(/\*(.+?)\*/g, '$1')
+    const reply = rawReply
+      ?.replace(/\*\*(.+?)\*\*/g, '$1')
+      .replace(/\*(.+?)\*/g, '$1')
+      .replace(/\*+/g, '')
 
     if (!reply) {
       return res.status(502).json({ error: 'Assistant returned an empty response' })
