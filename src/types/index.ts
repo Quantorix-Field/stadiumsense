@@ -24,6 +24,7 @@ export interface ChatRequestPayload {
   message: string
   language: SupportedLanguage
   history: ChatMessage[]
+  gates?: Gate[]
 }
 
 export interface ChatResponsePayload {
