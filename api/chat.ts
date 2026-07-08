@@ -109,7 +109,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const data = await geminiResponse.json()
-    const reply: string | undefined = data?.candidates?.[0]?.content?.parts?.[0]?.text
+    const rawReply: string | undefined = data?.candidates?.[0]?.content?.parts?.[0]?.text
+    const reply = rawReply?.replace(/\*\*(.+?)\*\*/g, '$1').replace(/\*(.+?)\*/g, '$1')
 
     if (!reply) {
       return res.status(502).json({ error: 'Assistant returned an empty response' })
