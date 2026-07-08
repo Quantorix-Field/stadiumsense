@@ -19,7 +19,7 @@ export function App() {
       </header>
 
       <main className="app-main">
-        <ChatAssistant />
+        <ChatAssistant gates={gates} />
         <GateFinder gates={gates} isLoading={isLoading} />
         <AccessibilityPanel gates={gates} />
       </main>
