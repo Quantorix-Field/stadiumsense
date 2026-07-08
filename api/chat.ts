@@ -41,6 +41,31 @@ If you don't have real-time data for something outside the provided gates, say s
 short sentence rather than inventing specifics.`
 const MAX_MESSAGE_LENGTH = 1000
 const MAX_HISTORY_MESSAGES = 10
+const RATE_LIMIT_WINDOW_MS = 60_000
+const RATE_LIMIT_MAX_REQUESTS = 10
+
+const requestLog = new Map<string, number[]>()
+
+/**
+ * Simple in-memory sliding-window rate limiter keyed by client IP.
+ * Resets on cold start, which is an acceptable tradeoff for a demo-scale
+ * serverless function — it still blocks the obvious spam/abuse case.
+ */
+function isRateLimited(clientId: string): boolean {
+  const now = Date.now()
+  const timestamps = (requestLog.get(clientId) ?? []).filter(
+    (t) => now - t < RATE_LIMIT_WINDOW_MS
+  )
+
+  if (timestamps.length >= RATE_LIMIT_MAX_REQUESTS) {
+    requestLog.set(clientId, timestamps)
+    return true
+  }
+
+  timestamps.push(now)
+  requestLog.set(clientId, timestamps)
+  return false
+}
 
 /**
  * Serverless proxy between the client and Gemini's API. The API key lives only
@@ -55,6 +80,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) {
     return res.status(500).json({ error: 'Server misconfiguration' })
+  }
+
+  const clientId =
+    (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ?? 'unknown'
+
+  if (isRateLimited(clientId)) {
+    return res.status(429).json({ error: 'Too many requests. Please wait a moment.' })
   }
 
   const body = req.body as ChatRequestBody
