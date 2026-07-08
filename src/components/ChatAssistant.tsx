@@ -1,18 +1,23 @@
 import { useRef, useState, type FormEvent } from 'react'
-import type { SupportedLanguage } from '../types'
+import type { Gate, SupportedLanguage } from '../types'
 import { useChat } from '../hooks/useChat'
 import { useLanguage } from '../hooks/useLanguage'
 import { formatTimestamp } from '../utils/formatters'
 import { LanguageSelector } from './LanguageSelector'
 
+interface ChatAssistantProps {
+  gates: Gate[]
+}
+
 /**
  * Core GenAI-powered chat surface. Fans ask natural-language questions about
  * navigation, gates, transport, or accessibility and get grounded, short
- * answers back through our serverless Gemini proxy.
+ * answers back through our serverless Gemini proxy, which is given the
+ * current gate conditions so its answers reflect real, live data.
  */
-export function ChatAssistant() {
+export function ChatAssistant({ gates }: ChatAssistantProps) {
   const { language, setLanguage, options } = useLanguage()
-  const { messages, isSending, error, sendMessage } = useChat(language)
+  const { messages, isSending, error, sendMessage } = useChat(language, gates)
   const [draft, setDraft] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
