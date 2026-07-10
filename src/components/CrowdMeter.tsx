@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { CrowdLevel } from '../types'
 import { crowdLevelColor, formatCrowdLevel } from '../utils/formatters'
 
@@ -11,7 +12,7 @@ interface CrowdMeterProps {
  * together (never color alone) so the meaning still comes through for
  * colorblind users or on low-contrast outdoor screens.
  */
-export function CrowdMeter({ level, score }: CrowdMeterProps) {
+function CrowdMeterComponent({ level, score }: CrowdMeterProps) {
   const color = crowdLevelColor(level)
   const label = formatCrowdLevel(level)
 
@@ -33,3 +34,10 @@ export function CrowdMeter({ level, score }: CrowdMeterProps) {
     </div>
   )
 }
+
+/**
+ * Memoized since CrowdMeter is rendered once per gate on every 15s poll —
+ * without this, all five meters re-render even when their own score is
+ * unchanged.
+ */
+export const CrowdMeter = memo(CrowdMeterComponent)
