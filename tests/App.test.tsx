@@ -9,9 +9,11 @@ describe('App', () => {
     expect(screen.getByText(/your ai guide for fifa world cup 2026 stadiums/i)).toBeInTheDocument()
   })
 
-  it('renders the chat assistant section', () => {
+  it('renders the chat assistant section', async () => {
     render(<App />)
-    expect(screen.getByLabelText(/stadiumsense assistant/i)).toBeInTheDocument()
+    expect(
+      await screen.findByLabelText(/stadiumsense assistant/i)
+    ).toBeInTheDocument()
   })
 
   it('renders gate recommendations once crowd data loads', async () => {
