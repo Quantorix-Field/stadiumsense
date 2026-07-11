@@ -1,5 +1,5 @@
 import { useRef, useState, type FormEvent } from 'react'
-import type { Gate, SupportedLanguage } from '../types'
+import type { Gate, SupportedLanguage, TransportOption } from '../types'
 import { useChat } from '../hooks/useChat'
 import { useLanguage } from '../hooks/useLanguage'
 import { formatTimestamp } from '../utils/formatters'
@@ -7,6 +7,7 @@ import { LanguageSelector } from './LanguageSelector'
 
 interface ChatAssistantProps {
   gates: Gate[]
+  transportOptions: TransportOption[]
 }
 
 /**
@@ -15,9 +16,9 @@ interface ChatAssistantProps {
  * answers back through our serverless Gemini proxy, which is given the
  * current gate conditions so its answers reflect real, live data.
  */
-export function ChatAssistant({ gates }: ChatAssistantProps) {
+export function ChatAssistant({ gates, transportOptions }: ChatAssistantProps) {
   const { language, setLanguage, options } = useLanguage()
-  const { messages, isSending, error, sendMessage } = useChat(language, gates)
+  const { messages, isSending, error, sendMessage } = useChat(language, gates, transportOptions)
   const [draft, setDraft] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
