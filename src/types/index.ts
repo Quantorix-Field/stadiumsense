@@ -25,6 +25,7 @@ export interface ChatRequestPayload {
   language: SupportedLanguage
   history: ChatMessage[]
   gates?: Gate[]
+  transportOptions?: TransportOption[]
 }
 
 export interface ChatResponsePayload {
