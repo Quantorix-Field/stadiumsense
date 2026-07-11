@@ -1,8 +1,16 @@
+import { Suspense, lazy } from 'react'
 import { useCrowdData } from './hooks/useCrowdData'
 import { GateFinder } from './components/GateFinder'
 import { AccessibilityPanel } from './components/AccessibilityPanel'
-import { ChatAssistant } from './components/ChatAssistant'
 
+/**
+ * Lazy-loaded since the chat assistant pulls in the largest chunk of
+ * interactive logic (hooks, API client) but isn't needed for first paint —
+ * this keeps the initial bundle smaller and the gate panel visible sooner.
+ */
+const ChatAssistant = lazy(() =>
+  import('./components/ChatAssistant').then((m) => ({ default: m.ChatAssistant }))
+)
 /**
  * Root layout for StadiumSense. Crowd data is fetched once here and passed
  * down, rather than each panel polling independently — keeps gate rankings
@@ -19,7 +27,9 @@ export function App() {
       </header>
 
       <main className="app-main">
-        <ChatAssistant gates={gates} />
+        <Suspense fallback={<p className="chat-loading">Loading assistant…</p>}>
+          <ChatAssistant gates={gates} />
+        </Suspense>
         <GateFinder gates={gates} isLoading={isLoading} />
         <AccessibilityPanel gates={gates} />
       </main>
