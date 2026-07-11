@@ -1,4 +1,11 @@
-import type { ChatMessage, ChatRequestPayload, ChatResponsePayload, Gate, SupportedLanguage } from '../types'
+import type {
+  ChatMessage,
+  ChatRequestPayload,
+  ChatResponsePayload,
+  Gate,
+  SupportedLanguage,
+  TransportOption,
+} from '../types'
 
 const CHAT_ENDPOINT = '/api/chat'
 
@@ -15,9 +22,10 @@ export async function sendChatMessage(
   message: string,
   language: SupportedLanguage,
   history: ChatMessage[],
-  gates: Gate[] = []
+  gates: Gate[] = [],
+  transportOptions: TransportOption[] = []
 ): Promise<string> {
-  const payload: ChatRequestPayload = { message, language, history, gates }
+  const payload: ChatRequestPayload = { message, language, history, gates, transportOptions }
 
   let response: Response
   try {
