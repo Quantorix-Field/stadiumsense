@@ -15,11 +15,17 @@ interface GateInfo {
   wheelchairAccessible: boolean
 }
 
+interface TransportInfo {
+  label: string
+  etaMinutes: number
+}
+
 interface ChatRequestBody {
   message: string
   language: string
   history: ChatMessage[]
   gates?: GateInfo[]
+  transportOptions?: TransportInfo[]
 }
 
 const LANGUAGE_NAMES: Record<string, string> = {
@@ -112,6 +118,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           .join('\n')}`
       : ''
 
+  const transportContext =
+    body.transportOptions && body.transportOptions.length > 0
+      ? `\n\nTransport options to the venue:\n${body.transportOptions
+          .map((t) => `- ${t.label}: ${t.etaMinutes} min`)
+          .join('\n')}`
+      : ''
+
   const contents = [
     ...recentHistory.map((m) => ({
       role: m.role === 'assistant' ? 'model' : 'user',
@@ -129,7 +142,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         body: JSON.stringify({
           contents,
           systemInstruction: {
-            parts: [{ text: `${SYSTEM_PROMPT}\nRespond in ${languageName}.${gateContext}` }],
+            parts: [
+              {
+                text: `${SYSTEM_PROMPT}\nRespond in ${languageName}.${gateContext}${transportContext}`,
+              },
+            ],
           },
           generationConfig: {
             maxOutputTokens: 500,
