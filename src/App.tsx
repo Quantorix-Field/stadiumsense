@@ -3,6 +3,7 @@ import { useCrowdData } from './hooks/useCrowdData'
 import { GateFinder } from './components/GateFinder'
 import { AccessibilityPanel } from './components/AccessibilityPanel'
 import { TransportPanel } from './components/TransportPanel'
+import { getTransportOptions } from './utils/transportData'
 /**
  * Lazy-loaded since the chat assistant pulls in the largest chunk of
  * interactive logic (hooks, API client) but isn't needed for first paint —
@@ -18,6 +19,7 @@ const ChatAssistant = lazy(() =>
  */
 export function App() {
   const { gates, isLoading } = useCrowdData()
+  const transportOptions = getTransportOptions()
 
   return (
     <div className="app-shell">
@@ -28,7 +30,7 @@ export function App() {
 
       <main className="app-main">
         <Suspense fallback={<p className="chat-loading">Loading assistant…</p>}>
-          <ChatAssistant gates={gates} />
+          <ChatAssistant gates={gates} transportOptions={transportOptions} />
         </Suspense>
         <GateFinder gates={gates} isLoading={isLoading} />
         <AccessibilityPanel gates={gates} />
