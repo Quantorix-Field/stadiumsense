@@ -50,6 +50,22 @@ export interface AccessibilityFeature {
   gateIds: string[]
 }
 
+export type TransportMode = 'metro' | 'bus' | 'shuttle' | 'walking'
+
+export interface TransportOption {
+  id: string
+  mode: TransportMode
+  label: string
+  etaMinutes: number
+  nearestGateId: string
+}
+
+export interface SustainabilityTip {
+  id: string
+  label: string
+  description: string
+}
+
 export interface ApiErrorResponse {
   error: string
 }
