@@ -381,3 +381,85 @@ a:focus-visible {
   font-size: 0.85rem;
   color: var(--color-text-muted);
 }
+
+/* Transport panel */
+
+.transport-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--spacing-3);
+}
+
+.transport-panel h2 {
+  margin: 0 0 var(--spacing-2);
+  font-size: 1.15rem;
+}
+
+.transport-panel h3 {
+  margin: var(--spacing-3) 0 var(--spacing-1);
+  font-size: 1rem;
+}
+
+.transport-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.transport-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--color-surface-raised);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.85rem;
+}
+
+.transport-icon {
+  font-size: 1.3rem;
+}
+
+.transport-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.transport-label {
+  font-size: 0.9rem;
+}
+
+.transport-eta {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.sustainability-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.sustainability-tip {
+  border-left: 3px solid var(--color-accent);
+  padding: 0.4rem 0.75rem;
+}
+
+.sustainability-tip strong {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 0.15rem;
+}
+
+.sustainability-tip p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
