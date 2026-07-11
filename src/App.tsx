@@ -2,7 +2,7 @@ import { Suspense, lazy } from 'react'
 import { useCrowdData } from './hooks/useCrowdData'
 import { GateFinder } from './components/GateFinder'
 import { AccessibilityPanel } from './components/AccessibilityPanel'
-
+import { TransportPanel } from './components/TransportPanel'
 /**
  * Lazy-loaded since the chat assistant pulls in the largest chunk of
  * interactive logic (hooks, API client) but isn't needed for first paint —
@@ -32,7 +32,8 @@ export function App() {
         </Suspense>
         <GateFinder gates={gates} isLoading={isLoading} />
         <AccessibilityPanel gates={gates} />
-      </main>
+          <TransportPanel />
+        </main>
 
       <footer className="app-footer">
         <p>Built for PromptWars Virtual — Challenge 4: Smart Stadiums &amp; Tournament Operations</p>
