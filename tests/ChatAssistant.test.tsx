@@ -9,7 +9,7 @@ describe('ChatAssistant', () => {
   })
 
   it('renders the empty state with no messages', () => {
-    render(<ChatAssistant gates={[]} />)
+    render(<ChatAssistant gates={[]} transportOptions={[]} />)
     expect(
       screen.getByText(/ask about gates, wait times, transport, or accessibility/i)
     ).toBeInTheDocument()
@@ -18,8 +18,7 @@ describe('ChatAssistant', () => {
   it('sends a message and displays the assistant reply', async () => {
     vi.spyOn(api, 'sendChatMessage').mockResolvedValue('Gate A has the shortest wait right now.')
 
-    render(<ChatAssistant gates={[]} />)
-
+    render(<ChatAssistant gates={[]} transportOptions={[]} />)
     const input = screen.getByPlaceholderText(/which gate has the shortest wait/i)
     const button = screen.getByRole('button', { name: /send/i })
 
@@ -35,7 +34,7 @@ describe('ChatAssistant', () => {
   it('clears the input field after sending', async () => {
     vi.spyOn(api, 'sendChatMessage').mockResolvedValue('Sure thing.')
 
-    render(<ChatAssistant gates={[]} />)
+    render(<ChatAssistant gates={[]} transportOptions={[]} />)
 
     const input = screen.getByPlaceholderText(/which gate has the shortest wait/i) as HTMLInputElement
     const button = screen.getByRole('button', { name: /send/i })
@@ -53,7 +52,7 @@ describe('ChatAssistant', () => {
       new Error('The assistant is temporarily unavailable. Please try again shortly.')
     )
 
-    render(<ChatAssistant gates={[]} />)
+    render(<ChatAssistant gates={[]} transportOptions={[]} />)
     const input = screen.getByPlaceholderText(/which gate has the shortest wait/i)
     const button = screen.getByRole('button', { name: /send/i })
 
@@ -71,8 +70,7 @@ describe('ChatAssistant', () => {
       () => new Promise((resolve) => { resolvePromise = resolve })
     )
 
-    render(<ChatAssistant gates={[]} />)
-
+    render(<ChatAssistant gates={[]} transportOptions={[]} />)
     const input = screen.getByPlaceholderText(/which gate has the shortest wait/i)
     const button = screen.getByRole('button', { name: /send/i }) as HTMLButtonElement
 
