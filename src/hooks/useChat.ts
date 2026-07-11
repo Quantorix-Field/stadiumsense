@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import type { ChatMessage, Gate, SupportedLanguage } from '../types'
+import type { ChatMessage, Gate, SupportedLanguage, TransportOption } from '../types'
 import { sendChatMessage } from '../utils/api'
 
 interface UseChatResult {
@@ -22,7 +22,11 @@ function createMessage(role: ChatMessage['role'], content: string): ChatMessage 
  * error surfacing. Talks to the backend proxy via sendChatMessage rather than
  * any AI SDK directly, so the UI never knows or cares which model is behind it.
  */
-export function useChat(language: SupportedLanguage, gates: Gate[] = []): UseChatResult {
+export function useChat(
+  language: SupportedLanguage,
+  gates: Gate[] = [],
+  transportOptions: TransportOption[] = []
+): UseChatResult {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [isSending, setIsSending] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -38,7 +42,7 @@ export function useChat(language: SupportedLanguage, gates: Gate[] = []): UseCha
       setError(null)
 
       try {
-        const reply = await sendChatMessage(trimmed, language, messages, gates)
+        const reply = await sendChatMessage(trimmed, language, messages, gates, transportOptions)
         setMessages((prev) => [...prev, createMessage('assistant', reply)])
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Something went wrong')
@@ -46,7 +50,7 @@ export function useChat(language: SupportedLanguage, gates: Gate[] = []): UseCha
         setIsSending(false)
       }
     },
-    [isSending, language, messages, gates]
+    [isSending, language, messages, gates, transportOptions]
   )
 
   return { messages, isSending, error, sendMessage }
