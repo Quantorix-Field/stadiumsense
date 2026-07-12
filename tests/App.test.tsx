@@ -31,9 +31,7 @@ describe('App', () => {
 
   it('renders the footer with challenge attribution', () => {
     render(<App />)
-    expect(
-      screen.getByText(/built for promptwars virtual/i)
-    ).toBeInTheDocument()
+    expect(screen.getByText(/built for promptwars virtual/i)).toBeInTheDocument()
   })
 
   it('renders the high-visibility mode toggle', () => {
