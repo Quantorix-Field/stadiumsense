@@ -117,4 +117,45 @@ describe('resolveRoute', () => {
       }
     }
   })
+
+  it('reports no urgency when minutesToKickoff is not provided', () => {
+    const result = resolveRoute({
+      fromGateId: 'gate-a',
+      toFacilityId: 'sensory-room',
+      accessibilityNeeds: [],
+    })
+    expect(result?.isUrgent).toBe(false)
+    expect(result?.urgencyMessage).toBeNull()
+  })
+
+  it('reports no urgency when there is ample time before kickoff', () => {
+    const result = resolveRoute({
+      fromGateId: 'gate-a',
+      toFacilityId: 'sensory-room',
+      accessibilityNeeds: [],
+      minutesToKickoff: 60,
+    })
+    expect(result?.isUrgent).toBe(false)
+    expect(result?.urgencyMessage).toBeNull()
+  })
+
+  it('flags urgency when time is very tight', () => {
+    const result = resolveRoute({
+      fromGateId: 'gate-a',
+      toFacilityId: 'sensory-room',
+      accessibilityNeeds: [],
+      minutesToKickoff: 1,
+    })
+    expect(result?.isUrgent).toBe(true)
+    expect(result?.urgencyMessage).toContain('min')
+  })
+
+  it('includes the estimated walk time in the route result', () => {
+    const result = resolveRoute({
+      fromGateId: 'gate-a',
+      toFacilityId: 'sensory-room',
+      accessibilityNeeds: [],
+    })
+    expect(result?.estimatedWalkMinutes).toBeGreaterThan(0)
+  })
 })
