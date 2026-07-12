@@ -14,16 +14,18 @@ Built for **Google PromptWars Virtual (Hack2Skill) — Challenge 4: Smart Stadiu
 
 **Fan Navigation & Multilingual Assistant**
 
-Of the themes listed in the challenge (navigation, crowd management, accessibility, transportation, sustainability, multilingual assistance, operational intelligence, real-time decision support), StadiumSense is built around a single, focused persona: **a fan standing outside the stadium who needs to get in quickly, safely, and comfortably.**
+Of the themes listed in the challenge (navigation, crowd management, accessibility, transportation, sustainability, multilingual assistance, operational intelligence, real-time decision support), StadiumSense is built around a single, focused persona: **a fan traveling to and arriving at the stadium who needs to get in quickly, safely, and sustainably.**
 
-This vertical was chosen because it naturally combines four of the challenge's core themes into one coherent, testable product rather than four disconnected features:
+This vertical was chosen because it naturally combines six of the challenge's core themes into one coherent, testable product rather than disconnected features:
 
 - **Navigation** — ranked gate recommendations based on live conditions
 - **Crowd management** — real-time crowd density per gate, visualized clearly
 - **Accessibility** — a wheelchair-accessible filter and a dedicated accessibility information panel
+- **Transportation** — ranked transport options (metro, bus, shuttle, walking) with live ETAs to the venue
+- **Sustainability** — practical, actionable tips encouraging lower-impact travel choices
 - **Multilingual assistance** — a GenAI chat assistant that answers in the fan's chosen language
 
-Rather than building a broad but shallow operations dashboard, this focus allows the solution to be judged end-to-end by a single, realistic user story: _"I just arrived at the stadium — which gate should I use?"_
+Rather than building a broad but shallow operations dashboard, this focus allows the solution to be judged end-to-end by a single, realistic user journey: *"How do I get to the stadium, and once I'm there, which gate should I use?"*
 
 ---
 
@@ -44,40 +46,43 @@ A second design principle was **security by default**. The Gemini API key never 
 ## How the Solution Works
 
 **User flow:**
-
-1. A fan opens the app and sees five stadium gates ranked by current conditions, refreshed automatically every 15 seconds.
+1. A fan opens the app and sees five stadium gates ranked by current conditions, refreshed automatically every 15 seconds, alongside ranked transportation options and sustainability tips for getting to the venue.
 2. They can toggle "Wheelchair-accessible only" to instantly filter to accessible entrances.
 3. They can switch the assistant's language (English, Spanish, Portuguese, French, Arabic, Hindi) from a dropdown.
-4. They ask a natural-language question — e.g. _"Which gate should I avoid right now?"_ or _"मुझे कौन सा गेट लेना चाहिए"_.
-5. The question, along with the live gate data and selected language, is sent to `/api/chat`.
+4. They ask a natural-language question — e.g. *"Which gate should I avoid right now?"*, *"How can I get to the stadium sustainably?"*, or *"मुझे कौन सा गेट लेना चाहिए"*.
+5. The question, along with the live gate data, transport options, and selected language, is sent to `/api/chat`.
 6. The serverless function builds a grounded prompt, calls the Gemini API (`gemini-flash-latest`), cleans the response, and returns a short, direct, plain-text answer in the requested language.
-7. The fan sees a specific, accurate answer — naming real gates with real numbers — not a generic response.
+7. The fan sees a specific, accurate answer — naming real gates, wait times, or transit options — not a generic response.
 
 **Technical architecture:**
 
 ```
 src/
-├── components/       → ErrorBoundary, ChatAssistant, GateFinder, CrowdMeter,
-│                        LanguageSelector, AccessibilityPanel
+├── components/       → ErrorBoundary, ChatAssistant (lazy-loaded), GateFinder,
+│                        CrowdMeter, LanguageSelector, AccessibilityPanel,
+│                        TransportPanel
 ├── hooks/            → useChat, useCrowdData, useLanguage
 ├── utils/            → crowdSimulator (deterministic mock data engine),
+│                        transportData (transport + sustainability data),
 │                        formatters, api (backend proxy client)
 ├── types/            → shared TypeScript contracts
 api/
 └── chat.ts           → Vercel serverless proxy — holds the Gemini key,
-                          grounds prompts in live gate data, rate-limits,
-                          and sanitizes output
+                          grounds prompts in live gate and transport data,
+                          rate-limits, and sanitizes output
 tests/                → Vitest + Testing Library coverage for all
                          components, hooks, and pure logic
 ```
 
 **Key engineering decisions:**
-
 - **Full TypeScript** across the frontend, backend function, and Vite config, with `tsc --noEmit` enforced in CI.
 - **Custom hooks** (`useChat`, `useCrowdData`, `useLanguage`) separate state logic from presentation, keeping components simple and testable.
 - **ErrorBoundary** wraps the entire app so a runtime error shows a recoverable fallback instead of a blank screen — important for a tool used on a stadium floor.
-- **CI pipeline** (GitHub Actions) runs typecheck, lint, and the full test suite on every push.
-- **34 automated tests** across 6 test files cover the crowd simulation logic, all custom hooks, and every interactive component — including error states, loading states, and filtering behavior.
+- **Performance-conscious rendering** — `CrowdMeter` and `GateFinder` are memoized to avoid unnecessary re-renders on each 15-second data refresh, and `ChatAssistant` is lazy-loaded via `React.lazy`/`Suspense` to keep the initial bundle smaller.
+- **In-memory rate limiting** on `/api/chat`, keyed by client IP, to guard against abuse.
+- **CI pipeline** (GitHub Actions) runs typecheck, lint, Prettier format-checking, and the full test suite on every push.
+- **Consistent formatting enforced automatically** via Prettier + `.editorconfig`, with contribution standards documented in `CONTRIBUTING.md`.
+- **44 automated tests** across 8 test files cover the crowd simulation logic, transport/sustainability data, all custom hooks, and every interactive component — including error states, loading states, and filtering behavior.
 
 ---
 
@@ -88,12 +93,13 @@ tests/                → Vitest + Testing Library coverage for all
 - **Gemini's `gemini-flash-latest` alias** was used instead of a pinned model version, since Google has deprecated several model versions during this project's development — using the rolling alias reduces the risk of the integration breaking again if a specific dated model is retired.
 - **Rate limiting is in-memory and per-instance**, which resets on a serverless cold start. This is an intentional, documented tradeoff appropriate for a demo-scale deployment; a production system would use a shared store (e.g. Redis) for persistent rate limiting across instances.
 - **Language selection is explicit** (via a dropdown) rather than auto-detected from the typed question, so that a fan's chosen language is always respected consistently, even if they type a question in a different language.
+- **Transportation options and sustainability tips are static reference data** rather than a live transit-authority feed, for the same reason as the crowd simulation — no such public feed exists for this event yet. The data shape (`TransportOption`, `SustainabilityTip`) is designed so a real transit API could be substituted without changing any consuming code.
 
 ---
 
 ## Tech Stack
 
-React 18 · TypeScript · Vite · Vitest + Testing Library · Vercel Serverless Functions · Google Gemini API · GitHub Actions CI
+React 18 · TypeScript · Vite · Vitest + Testing Library · Vercel Serverless Functions · Google Gemini API · Prettier · GitHub Actions CI
 
 ---
 
@@ -101,15 +107,19 @@ React 18 · TypeScript · Vite · Vitest + Testing Library · Vercel Serverless 
 
 ```bash
 npm install
-npm run dev          # start local dev server
-npm run typecheck    # verify TypeScript compiles cleanly
-npm run lint         # run ESLint
-npm run test         # run the full test suite
-npm run build        # production build
+npm run dev           # start local dev server
+npm run typecheck     # verify TypeScript compiles cleanly
+npm run lint          # run ESLint
+npm run format:check  # verify Prettier formatting
+npm run format        # auto-fix formatting
+npm run test          # run the full test suite
+npm run build         # production build
 ```
+
+See `CONTRIBUTING.md` for full contribution guidelines and code style conventions.
 
 A `GEMINI_API_KEY` environment variable is required for the chat assistant to function (set in Vercel's dashboard for deployment, or a local `.env` for development against the Vercel dev server).
 
 ---
 
-_Built for PromptWars Virtual — Challenge 4: Smart Stadiums & Tournament Operations._
+*Built for PromptWars Virtual — Challenge 4: Smart Stadiums & Tournament Operations.*
