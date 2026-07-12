@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { render } from '@testing-library/react'
 import { axe } from 'vitest-axe'
-import 'vitest-axe/extend-expect'
 import { GateFinder } from '../src/components/GateFinder'
 import { AccessibilityPanel } from '../src/components/AccessibilityPanel'
 import { TransportPanel } from '../src/components/TransportPanel'
@@ -43,25 +42,25 @@ describe('Accessibility (axe-core)', () => {
   it('GateFinder has no detectable accessibility violations', async () => {
     const { container } = render(<GateFinder gates={mockGates} isLoading={false} />)
     const results = await axe(container)
-    expect(results).toHaveNoViolations()
+    expect(results.violations).toHaveLength(0)
   })
 
   it('AccessibilityPanel has no detectable accessibility violations', async () => {
     const { container } = render(<AccessibilityPanel gates={mockGates} />)
     const results = await axe(container)
-    expect(results).toHaveNoViolations()
+    expect(results.violations).toHaveLength(0)
   })
 
   it('TransportPanel has no detectable accessibility violations', async () => {
     const { container } = render(<TransportPanel />)
     const results = await axe(container)
-    expect(results).toHaveNoViolations()
+    expect(results.violations).toHaveLength(0)
   })
 
   it('RoutePlanner has no detectable accessibility violations', async () => {
     const { container } = render(<RoutePlanner gates={mockGates} />)
     const results = await axe(container)
-    expect(results).toHaveNoViolations()
+    expect(results.violations).toHaveLength(0)
   })
 
   it('LanguageSelector has no detectable accessibility violations', async () => {
@@ -69,12 +68,12 @@ describe('Accessibility (axe-core)', () => {
       <LanguageSelector options={LANGUAGE_OPTIONS} value="en" onChange={() => {}} />
     )
     const results = await axe(container)
-    expect(results).toHaveNoViolations()
+    expect(results.violations).toHaveLength(0)
   })
 
   it('CrowdMeter has no detectable accessibility violations', async () => {
     const { container } = render(<CrowdMeter level="moderate" score={40} />)
     const results = await axe(container)
-    expect(results).toHaveNoViolations()
+    expect(results.violations).toHaveLength(0)
   })
 })
