@@ -91,15 +91,19 @@ export interface RouteStep {
 export interface RouteResult {
   destinationName: string
   totalDistanceMeters: number
+  estimatedWalkMinutes: number
   steps: RouteStep[]
   crowdLevel: CrowdLevel
   stepFree: boolean
+  isUrgent: boolean
+  urgencyMessage: string | null
 }
 
 export interface RouteQuery {
   fromGateId: string
   toFacilityId: string
   accessibilityNeeds: AccessibilityNeed[]
+  minutesToKickoff?: number
 }
 
 export interface ApiErrorResponse {
