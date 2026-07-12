@@ -44,9 +44,7 @@ function GateFinderComponent({ gates, isLoading }: GateFinderProps) {
         </label>
       </div>
 
-      {rankedGates.length === 0 && (
-        <p role="status">No gates match this filter right now.</p>
-      )}
+      {rankedGates.length === 0 && <p role="status">No gates match this filter right now.</p>}
 
       <ul className="gate-list">
         {rankedGates.map((gate, index) => (

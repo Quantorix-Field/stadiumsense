@@ -45,7 +45,8 @@ const SUSTAINABILITY_TIPS: SustainabilityTip[] = [
   {
     id: 'reusable-bottle',
     label: 'Bring a reusable water bottle',
-    description: 'Refill stations are available near every gate — help cut down on single-use plastic.',
+    description:
+      'Refill stations are available near every gate — help cut down on single-use plastic.',
   },
   {
     id: 'digital-ticket',

@@ -11,9 +11,7 @@ describe('App', () => {
 
   it('renders the chat assistant section', async () => {
     render(<App />)
-    expect(
-      await screen.findByLabelText(/stadiumsense assistant/i)
-    ).toBeInTheDocument()
+    expect(await screen.findByLabelText(/stadiumsense assistant/i)).toBeInTheDocument()
   })
 
   it('renders gate recommendations once crowd data loads', async () => {
@@ -33,8 +31,6 @@ describe('App', () => {
 
   it('renders the footer with challenge attribution', () => {
     render(<App />)
-    expect(
-      screen.getByText(/built for promptwars virtual/i)
-    ).toBeInTheDocument()
+    expect(screen.getByText(/built for promptwars virtual/i)).toBeInTheDocument()
   })
 })

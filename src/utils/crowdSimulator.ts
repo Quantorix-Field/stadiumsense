@@ -7,8 +7,18 @@ import type { Gate, CrowdLevel } from '../types'
  */
 const GATE_REGISTRY: Omit<Gate, 'crowdLevel' | 'crowdScore' | 'estimatedWaitMinutes'>[] = [
   { id: 'gate-a', name: 'Gate A — North Plaza', wheelchairAccessible: true, distanceMeters: 120 },
-  { id: 'gate-b', name: 'Gate B — East Concourse', wheelchairAccessible: true, distanceMeters: 340 },
-  { id: 'gate-c', name: 'Gate C — South Terrace', wheelchairAccessible: false, distanceMeters: 210 },
+  {
+    id: 'gate-b',
+    name: 'Gate B — East Concourse',
+    wheelchairAccessible: true,
+    distanceMeters: 340,
+  },
+  {
+    id: 'gate-c',
+    name: 'Gate C — South Terrace',
+    wheelchairAccessible: false,
+    distanceMeters: 210,
+  },
   { id: 'gate-d', name: 'Gate D — West Pavilion', wheelchairAccessible: true, distanceMeters: 480 },
   { id: 'gate-e', name: 'Gate E — VIP Entrance', wheelchairAccessible: true, distanceMeters: 90 },
 ]

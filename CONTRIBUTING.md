@@ -28,7 +28,7 @@ npm run format
 
 - Full TypeScript — no `any` types, `noUnusedLocals` and `noUnusedParameters` are enforced.
 - Business logic lives in `src/utils/` and `src/hooks/`, kept separate from presentational components in `src/components/`.
-- Every exported function that isn't self-explanatory should have a JSDoc comment explaining *why*, not just *what*.
+- Every exported function that isn't self-explanatory should have a JSDoc comment explaining _why_, not just _what_.
 - New features that touch user-facing behavior should include a corresponding test in `tests/`.
 
 ## Commit messages

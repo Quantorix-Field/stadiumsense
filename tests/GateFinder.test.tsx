@@ -53,9 +53,7 @@ describe('GateFinder', () => {
   })
 
   it('shows a message when no gates match the filter', () => {
-    const noAccessibleGates: Gate[] = [
-      { ...mockGates[0], wheelchairAccessible: false },
-    ]
+    const noAccessibleGates: Gate[] = [{ ...mockGates[0], wheelchairAccessible: false }]
     render(<GateFinder gates={noAccessibleGates} isLoading={false} />)
     const checkbox = screen.getByRole('checkbox', { name: /wheelchair-accessible only/i })
 

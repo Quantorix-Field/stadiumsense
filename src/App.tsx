@@ -34,11 +34,13 @@ export function App() {
         </Suspense>
         <GateFinder gates={gates} isLoading={isLoading} />
         <AccessibilityPanel gates={gates} />
-          <TransportPanel />
-        </main>
+        <TransportPanel />
+      </main>
 
       <footer className="app-footer">
-        <p>Built for PromptWars Virtual — Challenge 4: Smart Stadiums &amp; Tournament Operations</p>
+        <p>
+          Built for PromptWars Virtual — Challenge 4: Smart Stadiums &amp; Tournament Operations
+        </p>
       </footer>
     </div>
   )

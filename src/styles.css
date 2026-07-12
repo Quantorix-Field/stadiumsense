@@ -11,7 +11,12 @@
   --spacing-2: 1rem;
   --spacing-3: 1.5rem;
   --spacing-4: 2rem;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
 }
 
 * {

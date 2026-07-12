@@ -23,10 +23,7 @@ function CrowdMeterComponent({ level, score }: CrowdMeterProps) {
       aria-label={`Crowd level: ${label}, ${score} out of 100`}
     >
       <div className="crowd-meter-track">
-        <div
-          className="crowd-meter-fill"
-          style={{ width: `${score}%`, backgroundColor: color }}
-        />
+        <div className="crowd-meter-fill" style={{ width: `${score}%`, backgroundColor: color }} />
       </div>
       <span className="crowd-meter-label" style={{ color }}>
         {label}

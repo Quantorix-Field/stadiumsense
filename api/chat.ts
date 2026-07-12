@@ -59,9 +59,7 @@ const requestLog = new Map<string, number[]>()
  */
 function isRateLimited(clientId: string): boolean {
   const now = Date.now()
-  const timestamps = (requestLog.get(clientId) ?? []).filter(
-    (t) => now - t < RATE_LIMIT_WINDOW_MS
-  )
+  const timestamps = (requestLog.get(clientId) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS)
 
   if (timestamps.length >= RATE_LIMIT_MAX_REQUESTS) {
     requestLog.set(clientId, timestamps)
@@ -88,8 +86,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: 'Server misconfiguration' })
   }
 
-  const clientId =
-    (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ?? 'unknown'
+  const clientId = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ?? 'unknown'
 
   if (isRateLimited(clientId)) {
     return res.status(429).json({ error: 'Too many requests. Please wait a moment.' })

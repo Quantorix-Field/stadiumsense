@@ -26,9 +26,7 @@ describe('ChatAssistant', () => {
     fireEvent.click(button)
 
     expect(await screen.findByText('Which gate is fastest?')).toBeInTheDocument()
-    expect(
-      await screen.findByText('Gate A has the shortest wait right now.')
-    ).toBeInTheDocument()
+    expect(await screen.findByText('Gate A has the shortest wait right now.')).toBeInTheDocument()
   })
 
   it('clears the input field after sending', async () => {
@@ -36,7 +34,9 @@ describe('ChatAssistant', () => {
 
     render(<ChatAssistant gates={[]} transportOptions={[]} />)
 
-    const input = screen.getByPlaceholderText(/which gate has the shortest wait/i) as HTMLInputElement
+    const input = screen.getByPlaceholderText(
+      /which gate has the shortest wait/i
+    ) as HTMLInputElement
     const button = screen.getByRole('button', { name: /send/i })
 
     fireEvent.change(input, { target: { value: 'Hello' } })
@@ -59,15 +59,16 @@ describe('ChatAssistant', () => {
     fireEvent.change(input, { target: { value: 'Hello' } })
     fireEvent.click(button)
 
-    expect(
-      await screen.findByText(/temporarily unavailable/i)
-    ).toBeInTheDocument()
+    expect(await screen.findByText(/temporarily unavailable/i)).toBeInTheDocument()
   })
 
   it('disables the send button while a message is in flight', async () => {
     let resolvePromise: (value: string) => void = () => {}
     vi.spyOn(api, 'sendChatMessage').mockImplementation(
-      () => new Promise((resolve) => { resolvePromise = resolve })
+      () =>
+        new Promise((resolve) => {
+          resolvePromise = resolve
+        })
     )
 
     render(<ChatAssistant gates={[]} transportOptions={[]} />)
