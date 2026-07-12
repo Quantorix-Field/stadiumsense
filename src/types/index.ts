@@ -67,6 +67,44 @@ export interface SustainabilityTip {
   description: string
 }
 
+export type ConcourseSegment = 'N' | 'NE' | 'E' | 'SE' | 'S' | 'SW' | 'W' | 'NW'
+
+export type FacilityCategory =
+  | 'sensory-room'
+  | 'accessible-restroom'
+  | 'medical-station'
+  | 'accessible-seating'
+
+export interface Facility {
+  id: string
+  name: string
+  category: FacilityCategory
+  segment: ConcourseSegment
+}
+
+export type AccessibilityNeed = 'wheelchair' | 'low-vision' | 'deaf-hoh'
+
+export interface RouteStep {
+  segment: ConcourseSegment
+  instruction: string
+  distanceMeters: number
+  stepFree: boolean
+}
+
+export interface RouteResult {
+  destinationName: string
+  totalDistanceMeters: number
+  steps: RouteStep[]
+  crowdLevel: CrowdLevel
+  stepFree: boolean
+}
+
+export interface RouteQuery {
+  fromGateId: string
+  toFacilityId: string
+  accessibilityNeeds: AccessibilityNeed[]
+}
+
 export interface ApiErrorResponse {
   error: string
 }
