@@ -22,7 +22,7 @@ const ChatAssistant = lazy(() =>
 export function App() {
   const { gates, isLoading } = useCrowdData()
   const transportOptions = getTransportOptions()
-  const { mode, toggle, isHighVisibility } = useDisplayMode()
+  const { toggle, isHighVisibility } = useDisplayMode()
   return (
     <div className={`app-shell ${isHighVisibility ? 'app-shell-high-visibility' : ''}`}>
       <header className="app-header">
