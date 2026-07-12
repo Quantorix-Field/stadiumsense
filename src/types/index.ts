@@ -5,6 +5,7 @@
 
 export type SupportedLanguage = 'en' | 'es' | 'pt' | 'fr' | 'ar' | 'hi'
 
+export type DisplayMode = 'standard' | 'high-visibility'
 export interface LanguageOption {
   code: SupportedLanguage
   label: string
