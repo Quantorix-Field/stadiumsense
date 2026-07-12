@@ -67,4 +67,24 @@ describe('RoutePlanner', () => {
     fireEvent.click(screen.getByRole('button', { name: /get directions/i }))
     expect(screen.getByRole('alert')).toBeInTheDocument()
   })
+
+  it('renders the minutes-to-kickoff input', () => {
+    render(<RoutePlanner gates={mockGates} />)
+    expect(screen.getByLabelText(/minutes to kick-off/i)).toBeInTheDocument()
+  })
+
+  it('shows an urgency warning when time is very tight', () => {
+    render(<RoutePlanner gates={mockGates} />)
+    const kickoffInput = screen.getByLabelText(/minutes to kick-off/i)
+    fireEvent.change(kickoffInput, { target: { value: '1' } })
+    fireEvent.click(screen.getByRole('button', { name: /get directions/i }))
+    expect(screen.getByRole('alert', { name: '' })).toBeInTheDocument()
+  })
+
+  it('does not show an urgency warning when no kickoff time is given', () => {
+    render(<RoutePlanner gates={mockGates} />)
+    fireEvent.click(screen.getByRole('button', { name: /get directions/i }))
+    const alerts = screen.queryAllByRole('alert')
+    expect(alerts).toHaveLength(0)
+  })
 })
