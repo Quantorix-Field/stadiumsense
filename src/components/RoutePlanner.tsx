@@ -20,9 +20,9 @@ export function RoutePlanner({ gates }: RoutePlannerProps) {
   const [fromGateId, setFromGateId] = useState(gates[0]?.id ?? '')
   const [toFacilityId, setToFacilityId] = useState(facilities[0]?.id ?? '')
   const [accessibilityNeeds, setAccessibilityNeeds] = useState<AccessibilityNeed[]>([])
+  const [minutesToKickoff, setMinutesToKickoff] = useState('')
   const [result, setResult] = useState<RouteResult | null>(null)
   const [hasSearched, setHasSearched] = useState(false)
-
   const toggleNeed = (need: AccessibilityNeed) => {
     setAccessibilityNeeds((prev) =>
       prev.includes(need) ? prev.filter((n) => n !== need) : [...prev, need]
@@ -31,7 +31,13 @@ export function RoutePlanner({ gates }: RoutePlannerProps) {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    const route = resolveRoute({ fromGateId, toFacilityId, accessibilityNeeds })
+    const parsedMinutes = minutesToKickoff.trim() === '' ? undefined : Number(minutesToKickoff)
+    const route = resolveRoute({
+      fromGateId,
+      toFacilityId,
+      accessibilityNeeds,
+      minutesToKickoff: parsedMinutes,
+    })
     setResult(route)
     setHasSearched(true)
   }
@@ -77,6 +83,17 @@ export function RoutePlanner({ gates }: RoutePlannerProps) {
           ))}
         </fieldset>
 
+        <label htmlFor="minutes-to-kickoff">Minutes to kick-off (optional)</label>
+        <input
+          id="minutes-to-kickoff"
+          type="number"
+          min="0"
+          inputMode="numeric"
+          placeholder="e.g. 15"
+          value={minutesToKickoff}
+          onChange={(e) => setMinutesToKickoff(e.target.value)}
+        />
+
         <button type="submit">Get directions</button>
       </form>
 
@@ -88,6 +105,11 @@ export function RoutePlanner({ gates }: RoutePlannerProps) {
 
       {result && (
         <div className="route-result" aria-live="polite">
+          {result.isUrgent && result.urgencyMessage && (
+            <p role="alert" className="route-urgency-warning">
+              ⚠️ {result.urgencyMessage}
+            </p>
+          )}
           <div className="route-badges">
             <span className="route-badge">{result.destinationName}</span>
             <span className="route-badge">Crowd: {formatCrowdLevel(result.crowdLevel)}</span>
