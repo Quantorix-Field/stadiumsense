@@ -70,10 +70,7 @@ export interface SustainabilityTip {
 export type ConcourseSegment = 'N' | 'NE' | 'E' | 'SE' | 'S' | 'SW' | 'W' | 'NW'
 
 export type FacilityCategory =
-  | 'sensory-room'
-  | 'accessible-restroom'
-  | 'medical-station'
-  | 'accessible-seating'
+  'sensory-room' | 'accessible-restroom' | 'medical-station' | 'accessible-seating'
 
 export interface Facility {
   id: string
