@@ -5,6 +5,7 @@ import { AccessibilityPanel } from './components/AccessibilityPanel'
 import { TransportPanel } from './components/TransportPanel'
 import { RoutePlanner } from './components/RoutePlanner'
 import { getTransportOptions } from './utils/transportData'
+import { useDisplayMode } from './hooks/useDisplayMode'
 /**
  * Lazy-loaded since the chat assistant pulls in the largest chunk of
  * interactive logic (hooks, API client) but isn't needed for first paint —
@@ -21,11 +22,21 @@ const ChatAssistant = lazy(() =>
 export function App() {
   const { gates, isLoading } = useCrowdData()
   const transportOptions = getTransportOptions()
-
+  const { mode, toggle, isHighVisibility } = useDisplayMode()
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${isHighVisibility ? 'app-shell-high-visibility' : ''}`}>
       <header className="app-header">
-        <h1>StadiumSense</h1>
+        <div className="app-header-top">
+          <h1>StadiumSense</h1>
+          <button
+            type="button"
+            className="display-mode-toggle"
+            onClick={toggle}
+            aria-pressed={isHighVisibility}
+          >
+            {isHighVisibility ? '✓ ' : ''}High-visibility / screen-reader mode
+          </button>
+        </div>
         <p>Your AI guide for FIFA World Cup 2026 stadiums</p>
       </header>
 
