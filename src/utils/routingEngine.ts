@@ -50,6 +50,8 @@ const SEGMENT_LABELS: Record<ConcourseSegment, string> = {
 }
 
 const SEGMENT_DISTANCE_METERS = 55
+const WALKING_METERS_PER_MINUTE = 70
+const URGENCY_BUFFER_MINUTES = 3
 
 /**
  * Maps a gate to its nearest concourse segment, so a route can start
@@ -108,6 +110,40 @@ function pathCrowdPenalty(path: ConcourseSegment[]): number {
  * downstream is to phrase these already-computed facts in the fan's
  * language; it cannot invent a facility or a distance that isn't here.
  */
+/**
+ * Determines whether a route is at risk of not being completed before
+ * kickoff, and if so, produces a plain-language warning. This is the
+ * urgency layer of "logical decision making based on user context" —
+ * the same route can be flagged differently depending on how much time
+ * the fan actually has, computed here rather than guessed by an LLM.
+ */
+function assessUrgency(
+  estimatedWalkMinutes: number,
+  minutesToKickoff: number | undefined
+): { isUrgent: boolean; urgencyMessage: string | null } {
+  if (minutesToKickoff === undefined) {
+    return { isUrgent: false, urgencyMessage: null }
+  }
+
+  const remainingBuffer = minutesToKickoff - estimatedWalkMinutes
+
+  if (remainingBuffer < 0) {
+    return {
+      isUrgent: true,
+      urgencyMessage: `This route takes about ${estimatedWalkMinutes} min, longer than the ${minutesToKickoff} min you have before kickoff — consider the nearest gate instead.`,
+    }
+  }
+
+  if (remainingBuffer < URGENCY_BUFFER_MINUTES) {
+    return {
+      isUrgent: true,
+      urgencyMessage: `Tight on time — this route takes about ${estimatedWalkMinutes} min, leaving only ${remainingBuffer} min of buffer before kickoff.`,
+    }
+  }
+
+  return { isUrgent: false, urgencyMessage: null }
+}
+
 export function resolveRoute(query: RouteQuery): RouteResult | null {
   const facility = FACILITIES.find((f) => f.id === query.toFacilityId)
   if (!facility) return null
@@ -143,18 +179,24 @@ export function resolveRoute(query: RouteQuery): RouteResult | null {
 
   const totalDistanceMeters = steps.reduce((sum, s) => sum + s.distanceMeters, 0)
   const allStepFree = steps.every((s) => s.stepFree)
+  const estimatedWalkMinutes = Math.max(1, Math.round(totalDistanceMeters / WALKING_METERS_PER_MINUTE))
 
   const worstCrowdScore = Math.max(
     0,
     ...chosenPath.map((segment) => gatesBySegment.get(segment)?.crowdScore ?? 0)
   )
 
+  const { isUrgent, urgencyMessage } = assessUrgency(estimatedWalkMinutes, query.minutesToKickoff)
+
   return {
     destinationName: facility.name,
     totalDistanceMeters,
+    estimatedWalkMinutes,
     steps,
     crowdLevel: scoreToCrowdLevel(worstCrowdScore),
     stepFree: allStepFree,
+    isUrgent,
+    urgencyMessage,
   }
 }
 
