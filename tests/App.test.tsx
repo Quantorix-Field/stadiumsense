@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import { App } from '../src/App'
 
 describe('App', () => {
@@ -31,6 +31,28 @@ describe('App', () => {
 
   it('renders the footer with challenge attribution', () => {
     render(<App />)
-    expect(screen.getByText(/built for promptwars virtual/i)).toBeInTheDocument()
+    expect(
+      screen.getByText(/built for promptwars virtual/i)
+    ).toBeInTheDocument()
+  })
+
+  it('renders the high-visibility mode toggle', () => {
+    render(<App />)
+    expect(
+      screen.getByRole('button', { name: /high-visibility \/ screen-reader mode/i })
+    ).toBeInTheDocument()
+  })
+
+  it('toggles high-visibility mode on click', () => {
+    render(<App />)
+    const toggleButton = screen.getByRole('button', {
+      name: /high-visibility \/ screen-reader mode/i,
+    })
+
+    expect(toggleButton).toHaveAttribute('aria-pressed', 'false')
+
+    fireEvent.click(toggleButton)
+
+    expect(toggleButton).toHaveAttribute('aria-pressed', 'true')
   })
 })
