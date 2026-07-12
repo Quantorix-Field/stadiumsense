@@ -3,6 +3,7 @@ import { useCrowdData } from './hooks/useCrowdData'
 import { GateFinder } from './components/GateFinder'
 import { AccessibilityPanel } from './components/AccessibilityPanel'
 import { TransportPanel } from './components/TransportPanel'
+import { RoutePlanner } from './components/RoutePlanner'
 import { getTransportOptions } from './utils/transportData'
 /**
  * Lazy-loaded since the chat assistant pulls in the largest chunk of
@@ -32,6 +33,7 @@ export function App() {
         <Suspense fallback={<p className="chat-loading">Loading assistant…</p>}>
           <ChatAssistant gates={gates} transportOptions={transportOptions} />
         </Suspense>
+        <RoutePlanner gates={gates} />
         <GateFinder gates={gates} isLoading={isLoading} />
         <AccessibilityPanel gates={gates} />
         <TransportPanel />
