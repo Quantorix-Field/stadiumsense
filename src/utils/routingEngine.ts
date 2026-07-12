@@ -179,7 +179,10 @@ export function resolveRoute(query: RouteQuery): RouteResult | null {
 
   const totalDistanceMeters = steps.reduce((sum, s) => sum + s.distanceMeters, 0)
   const allStepFree = steps.every((s) => s.stepFree)
-  const estimatedWalkMinutes = Math.max(1, Math.round(totalDistanceMeters / WALKING_METERS_PER_MINUTE))
+  const estimatedWalkMinutes = Math.max(
+    1,
+    Math.round(totalDistanceMeters / WALKING_METERS_PER_MINUTE)
+  )
 
   const worstCrowdScore = Math.max(
     0,
