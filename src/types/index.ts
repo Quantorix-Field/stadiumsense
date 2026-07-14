@@ -6,6 +6,28 @@
 export type SupportedLanguage = 'en' | 'es' | 'pt' | 'fr' | 'ar' | 'hi'
 
 export type DisplayMode = 'standard' | 'high-visibility'
+
+export type Persona = 'fan' | 'volunteer' | 'organizer' | 'venue-staff'
+
+export interface VenueOverview {
+  averageWaitMinutes: number
+  averageCrowdScore: number
+  busiestGateId: string
+  quietestGateId: string
+}
+
+export interface SuggestedAction {
+  id: string
+  severity: 'info' | 'warning' | 'critical'
+  message: string
+  gateId: string
+}
+
+export interface QuickPhrase {
+  id: string
+  english: string
+  translations: Record<SupportedLanguage, string>
+}
 export interface LanguageOption {
   code: SupportedLanguage
   label: string
