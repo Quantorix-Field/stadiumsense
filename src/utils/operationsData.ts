@@ -65,7 +65,7 @@ const QUICK_PHRASES: QuickPhrase[] = [
       en: 'This way to the exit.',
       es: 'Por aquí para la salida.',
       pt: 'Por aqui para a saída.',
-      fr: "Par ici pour la sortie.",
+      fr: 'Par ici pour la sortie.',
       ar: 'من هنا للخروج.',
       hi: 'बाहर जाने का रास्ता इधर है।',
     },
