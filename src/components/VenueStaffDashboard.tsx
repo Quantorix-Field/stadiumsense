@@ -72,9 +72,7 @@ export function VenueStaffDashboard({ gates }: VenueStaffDashboardProps) {
           {facilities.map((facility) => (
             <li key={facility.id} className="facility-item">
               <span className="facility-name">{facility.name}</span>
-              <span className="facility-segment">
-                {SEGMENT_LABELS[facility.segment]} concourse
-              </span>
+              <span className="facility-segment">{SEGMENT_LABELS[facility.segment]} concourse</span>
             </li>
           ))}
         </ul>
