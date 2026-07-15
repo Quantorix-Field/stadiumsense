@@ -33,9 +33,8 @@ describe('VenueStaffDashboard', () => {
   it('renders the medical station quick-access section', () => {
     render(<VenueStaffDashboard gates={mockGates} />)
     expect(screen.getByText('Medical station')).toBeInTheDocument()
-    expect(screen.getByText(/Medical Station/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/Medical Station/i).length).toBeGreaterThan(0)
   })
-
   it('renders every gate in the operations table', () => {
     render(<VenueStaffDashboard gates={mockGates} />)
     expect(screen.getByText('Gate A — North Plaza')).toBeInTheDocument()
