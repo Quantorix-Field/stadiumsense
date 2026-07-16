@@ -18,7 +18,12 @@ interface ChatAssistantProps {
  * answers back through our serverless Gemini proxy, which is given the
  * current gate conditions so its answers reflect real, live data.
  */
-export function ChatAssistant({ gates, transportOptions, persona, operations }: ChatAssistantProps) {
+export function ChatAssistant({
+  gates,
+  transportOptions,
+  persona,
+  operations,
+}: ChatAssistantProps) {
   const { language, setLanguage, options } = useLanguage()
   const { messages, isSending, error, sendMessage } = useChat(
     language,
