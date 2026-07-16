@@ -58,15 +58,15 @@ export function App() {
       {persona === 'venue-staff' && <VenueStaffDashboard gates={gates} />}
 
       {persona === 'fan' && (
-      <main className="app-main">
-        <Suspense fallback={<p className="chat-loading">Loading assistant…</p>}>
-          <ChatAssistant gates={gates} transportOptions={transportOptions} />
-        </Suspense>
-        <RoutePlanner gates={gates} />
-        <GateFinder gates={gates} isLoading={isLoading} />
-        <AccessibilityPanel gates={gates} />
-        <TransportPanel />
-      </main>
+        <main className="app-main">
+          <Suspense fallback={<p className="chat-loading">Loading assistant…</p>}>
+            <ChatAssistant gates={gates} transportOptions={transportOptions} />
+          </Suspense>
+          <RoutePlanner gates={gates} />
+          <GateFinder gates={gates} isLoading={isLoading} />
+          <AccessibilityPanel gates={gates} />
+          <TransportPanel />
+        </main>
       )}
 
       <footer className="app-footer">
