@@ -1,5 +1,12 @@
 import { useCallback, useState } from 'react'
-import type { ChatMessage, Gate, SupportedLanguage, TransportOption } from '../types'
+import type {
+  ChatMessage,
+  Gate,
+  OperationsContext,
+  Persona,
+  SupportedLanguage,
+  TransportOption,
+} from '../types'
 import { sendChatMessage } from '../utils/api'
 
 interface UseChatResult {
@@ -25,7 +32,9 @@ function createMessage(role: ChatMessage['role'], content: string): ChatMessage 
 export function useChat(
   language: SupportedLanguage,
   gates: Gate[] = [],
-  transportOptions: TransportOption[] = []
+  transportOptions: TransportOption[] = [],
+  persona?: Persona,
+  operations?: OperationsContext
 ): UseChatResult {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [isSending, setIsSending] = useState(false)
@@ -42,7 +51,15 @@ export function useChat(
       setError(null)
 
       try {
-        const reply = await sendChatMessage(trimmed, language, messages, gates, transportOptions)
+        const reply = await sendChatMessage(
+          trimmed,
+          language,
+          messages,
+          gates,
+          transportOptions,
+          persona,
+          operations
+        )
         setMessages((prev) => [...prev, createMessage('assistant', reply)])
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Something went wrong')
@@ -50,7 +67,7 @@ export function useChat(
         setIsSending(false)
       }
     },
-    [isSending, language, messages, gates, transportOptions]
+    [isSending, language, messages, gates, transportOptions, persona, operations]
   )
 
   return { messages, isSending, error, sendMessage }
