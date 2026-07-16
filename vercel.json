@@ -4,7 +4,7 @@
   "framework": "vite",
   "functions": {
     "api/chat.ts": {
-      "maxDuration": 15
+      "maxDuration": 30
     }
   },
   "rewrites": [
