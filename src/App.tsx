@@ -44,8 +44,20 @@ export function App() {
           </button>
         </div>
         <p>Your AI guide for FIFA World Cup 2026 stadiums</p>
+        {persona && (
+          <button type="button" className="change-role-button" onClick={() => setPersona(null)}>
+            ← Change role
+          </button>
+        )}
       </header>
 
+      {!persona && <PersonaSelector onSelect={setPersona} />}
+
+      {persona === 'volunteer' && <VolunteerDashboard gates={gates} />}
+      {persona === 'organizer' && <OrganizerDashboard gates={gates} />}
+      {persona === 'venue-staff' && <VenueStaffDashboard gates={gates} />}
+
+      {persona === 'fan' && (
       <main className="app-main">
         <Suspense fallback={<p className="chat-loading">Loading assistant…</p>}>
           <ChatAssistant gates={gates} transportOptions={transportOptions} />
@@ -55,6 +67,7 @@ export function App() {
         <AccessibilityPanel gates={gates} />
         <TransportPanel />
       </main>
+      )}
 
       <footer className="app-footer">
         <p>
