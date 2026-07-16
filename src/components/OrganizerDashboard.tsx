@@ -1,7 +1,13 @@
+import { lazy, Suspense } from 'react'
 import type { Gate } from '../types'
 import { getSuggestedActions, getVenueOverview } from '../utils/operationsData'
 import { formatCrowdLevel, formatWaitTime } from '../utils/formatters'
 import { scoreToCrowdLevel } from '../utils/crowdSimulator'
+import { getTransportOptions } from '../utils/transportData'
+
+const ChatAssistant = lazy(() =>
+  import('./ChatAssistant').then((m) => ({ default: m.ChatAssistant }))
+)
 
 interface OrganizerDashboardProps {
   gates: Gate[]
@@ -16,10 +22,26 @@ interface OrganizerDashboardProps {
 export function OrganizerDashboard({ gates }: OrganizerDashboardProps) {
   const overview = getVenueOverview(gates)
   const suggestedActions = getSuggestedActions(gates)
+  const transportOptions = getTransportOptions()
 
   return (
     <div className="persona-dashboard">
       <h2>Organizer Dashboard</h2>
+
+      <Suspense fallback={<p className="chat-loading">Loading assistant…</p>}>
+        <ChatAssistant
+          gates={gates}
+          transportOptions={transportOptions}
+          persona="organizer"
+          operations={{
+            suggestedActions: suggestedActions.map((a) => a.message),
+            averageWaitMinutes: overview?.averageWaitMinutes,
+            averageCrowdLevel: overview
+              ? formatCrowdLevel(scoreToCrowdLevel(overview.averageCrowdScore))
+              : undefined,
+          }}
+        />
+      </Suspense>
 
       {overview && (
         <section className="venue-overview" aria-label="Venue overview">
