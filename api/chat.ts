@@ -131,6 +131,33 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           .join('\n')}`
       : ''
 
+  const personaContext = (() => {
+    if (!body.persona || body.persona === 'fan') return ''
+
+    const roleLabel: Record<string, string> = {
+      volunteer: 'a volunteer helping fans on the ground',
+      organizer: 'an event organizer overseeing venue operations',
+      'venue-staff': 'venue staff managing gates and facilities',
+    }
+
+    const ops = body.operations
+    const opsLines: string[] = []
+    if (ops?.averageWaitMinutes !== undefined) {
+      opsLines.push(`Average wait across all gates: ${ops.averageWaitMinutes} min`)
+    }
+    if (ops?.averageCrowdLevel) {
+      opsLines.push(`Average crowd level: ${ops.averageCrowdLevel}`)
+    }
+    if (ops?.suggestedActions && ops.suggestedActions.length > 0) {
+      opsLines.push(`Current suggested actions:\n${ops.suggestedActions.map((a) => `- ${a}`).join('\n')}`)
+    }
+    if (ops?.facilities && ops.facilities.length > 0) {
+      opsLines.push(`Registered facilities:\n${ops.facilities.map((f) => `- ${f}`).join('\n')}`)
+    }
+
+    return `\n\nYou are speaking with ${roleLabel[body.persona] ?? 'venue personnel'}. Answer with operational, practical detail suited to their role.${opsLines.length > 0 ? `\n\n${opsLines.join('\n')}` : ''}`
+  })()
+
   const contents = [
     ...recentHistory.map((m) => ({
       role: m.role === 'assistant' ? 'model' : 'user',
@@ -150,12 +177,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           systemInstruction: {
             parts: [
               {
-                text: `${SYSTEM_PROMPT}\nRespond in ${languageName}.${gateContext}${transportContext}`,
+                text: `${SYSTEM_PROMPT}\nRespond in ${languageName}.${gateContext}${transportContext}${personaContext}`,
               },
             ],
           },
           generationConfig: {
-            maxOutputTokens: 500,
+            maxOutputTokens: 700,
             temperature: 0.7,
             thinkingConfig: {
               thinkingBudget: 0,
