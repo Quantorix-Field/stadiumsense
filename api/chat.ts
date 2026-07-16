@@ -149,7 +149,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       opsLines.push(`Average crowd level: ${ops.averageCrowdLevel}`)
     }
     if (ops?.suggestedActions && ops.suggestedActions.length > 0) {
-      opsLines.push(`Current suggested actions:\n${ops.suggestedActions.map((a) => `- ${a}`).join('\n')}`)
+      opsLines.push(
+        `Current suggested actions:\n${ops.suggestedActions.map((a) => `- ${a}`).join('\n')}`
+      )
     }
     if (ops?.facilities && ops.facilities.length > 0) {
       opsLines.push(`Registered facilities:\n${ops.facilities.map((f) => `- ${f}`).join('\n')}`)
