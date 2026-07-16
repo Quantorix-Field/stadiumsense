@@ -3,6 +3,8 @@ import type {
   ChatRequestPayload,
   ChatResponsePayload,
   Gate,
+  OperationsContext,
+  Persona,
   SupportedLanguage,
   TransportOption,
 } from '../types'
@@ -23,9 +25,19 @@ export async function sendChatMessage(
   language: SupportedLanguage,
   history: ChatMessage[],
   gates: Gate[] = [],
-  transportOptions: TransportOption[] = []
+  transportOptions: TransportOption[] = [],
+  persona?: Persona,
+  operations?: OperationsContext
 ): Promise<string> {
-  const payload: ChatRequestPayload = { message, language, history, gates, transportOptions }
+  const payload: ChatRequestPayload = {
+    message,
+    language,
+    history,
+    gates,
+    transportOptions,
+    persona,
+    operations,
+  }
 
   let response: Response
   try {
