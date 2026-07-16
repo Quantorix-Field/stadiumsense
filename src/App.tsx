@@ -1,11 +1,16 @@
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, useState } from 'react'
 import { useCrowdData } from './hooks/useCrowdData'
 import { GateFinder } from './components/GateFinder'
 import { AccessibilityPanel } from './components/AccessibilityPanel'
 import { TransportPanel } from './components/TransportPanel'
 import { RoutePlanner } from './components/RoutePlanner'
+import { PersonaSelector } from './components/PersonaSelector'
+import { VolunteerDashboard } from './components/VolunteerDashboard'
+import { OrganizerDashboard } from './components/OrganizerDashboard'
+import { VenueStaffDashboard } from './components/VenueStaffDashboard'
 import { getTransportOptions } from './utils/transportData'
 import { useDisplayMode } from './hooks/useDisplayMode'
+import type { Persona } from './types'
 /**
  * Lazy-loaded since the chat assistant pulls in the largest chunk of
  * interactive logic (hooks, API client) but isn't needed for first paint —
@@ -23,6 +28,7 @@ export function App() {
   const { gates, isLoading } = useCrowdData()
   const transportOptions = getTransportOptions()
   const { toggle, isHighVisibility } = useDisplayMode()
+  const [persona, setPersona] = useState<Persona | null>(null)
   return (
     <div className={`app-shell ${isHighVisibility ? 'app-shell-high-visibility' : ''}`}>
       <header className="app-header">
