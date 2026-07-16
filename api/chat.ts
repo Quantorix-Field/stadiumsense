@@ -20,12 +20,21 @@ interface TransportInfo {
   etaMinutes: number
 }
 
+interface OperationsInfo {
+  suggestedActions?: string[]
+  averageWaitMinutes?: number
+  averageCrowdLevel?: string
+  facilities?: string[]
+}
+
 interface ChatRequestBody {
   message: string
   language: string
   history: ChatMessage[]
   gates?: GateInfo[]
   transportOptions?: TransportInfo[]
+  persona?: string
+  operations?: OperationsInfo
 }
 
 const LANGUAGE_NAMES: Record<string, string> = {
