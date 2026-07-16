@@ -1,7 +1,12 @@
+import { lazy, Suspense } from 'react'
 import type { Gate } from '../types'
 import { getFacilities } from '../utils/routingEngine'
 import { formatCrowdLevel, formatDistance, formatWaitTime } from '../utils/formatters'
+import { getTransportOptions } from '../utils/transportData'
 
+const ChatAssistant = lazy(() =>
+  import('./ChatAssistant').then((m) => ({ default: m.ChatAssistant }))
+)
 interface VenueStaffDashboardProps {
   gates: Gate[]
 }
@@ -26,10 +31,22 @@ const SEGMENT_LABELS: Record<string, string> = {
 export function VenueStaffDashboard({ gates }: VenueStaffDashboardProps) {
   const facilities = getFacilities()
   const medicalStation = facilities.find((f) => f.category === 'medical-station')
+  const transportOptions = getTransportOptions()
 
   return (
     <div className="persona-dashboard">
       <h2>Venue Staff Dashboard</h2>
+
+      <Suspense fallback={<p className="chat-loading">Loading assistant…</p>}>
+        <ChatAssistant
+          gates={gates}
+          transportOptions={transportOptions}
+          persona="venue-staff"
+          operations={{
+            facilities: facilities.map((f) => `${f.name} (${f.segment} concourse)`),
+          }}
+        />
+      </Suspense>
 
       {medicalStation && (
         <section className="medical-quick-access" aria-label="Nearest medical station">
