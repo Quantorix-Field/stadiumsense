@@ -1,7 +1,12 @@
+import { lazy, Suspense } from 'react'
 import type { Gate } from '../types'
 import { getQuickPhrases, getSuggestedActions } from '../utils/operationsData'
 import { RoutePlanner } from './RoutePlanner'
+import { getTransportOptions } from '../utils/transportData'
 
+const ChatAssistant = lazy(() =>
+  import('./ChatAssistant').then((m) => ({ default: m.ChatAssistant }))
+)
 interface VolunteerDashboardProps {
   gates: Gate[]
 }
@@ -15,10 +20,22 @@ interface VolunteerDashboardProps {
 export function VolunteerDashboard({ gates }: VolunteerDashboardProps) {
   const suggestedActions = getSuggestedActions(gates)
   const quickPhrases = getQuickPhrases()
+  const transportOptions = getTransportOptions()
 
   return (
     <div className="persona-dashboard">
       <h2>Volunteer Dashboard</h2>
+
+      <Suspense fallback={<p className="chat-loading">Loading assistant…</p>}>
+        <ChatAssistant
+          gates={gates}
+          transportOptions={transportOptions}
+          persona="volunteer"
+          operations={{
+            suggestedActions: suggestedActions.map((a) => a.message),
+          }}
+        />
+      </Suspense>
 
       <section className="priority-alerts" aria-label="Priority alerts">
         <h3>Priority alerts</h3>
