@@ -43,12 +43,21 @@ export interface ChatMessage {
   timestamp: number
 }
 
+export interface OperationsContext {
+  suggestedActions?: string[]
+  averageWaitMinutes?: number
+  averageCrowdLevel?: string
+  facilities?: string[]
+}
+
 export interface ChatRequestPayload {
   message: string
   language: SupportedLanguage
   history: ChatMessage[]
   gates?: Gate[]
   transportOptions?: TransportOption[]
+  persona?: Persona
+  operations?: OperationsContext
 }
 
 export interface ChatResponsePayload {
