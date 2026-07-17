@@ -20,25 +20,7 @@ const CHAT_ENDPOINT = '/api/chat'
  *
  * @throws Error with a user-facing message if the request fails
  */
-export async function sendChatMessage(
-  message: string,
-  language: SupportedLanguage,
-  history: ChatMessage[],
-  gates: Gate[] = [],
-  transportOptions: TransportOption[] = [],
-  persona?: Persona,
-  operations?: OperationsContext
-): Promise<string> {
-  const payload: ChatRequestPayload = {
-    message,
-    language,
-    history,
-    gates,
-    transportOptions,
-    persona,
-    operations,
-  }
-
+async function requestChatReply(payload: ChatRequestPayload): Promise<string> {
   let response: Response
   try {
     response = await fetch(CHAT_ENDPOINT, {
@@ -59,4 +41,33 @@ export async function sendChatMessage(
 
   const data: ChatResponsePayload = await response.json()
   return data.reply
+}
+
+export async function sendChatMessage(
+  message: string,
+  language: SupportedLanguage,
+  history: ChatMessage[],
+  gates: Gate[] = [],
+  transportOptions: TransportOption[] = [],
+  persona?: Persona,
+  operations?: OperationsContext
+): Promise<string> {
+  const payload: ChatRequestPayload = {
+    message,
+    language,
+    history,
+    gates,
+    transportOptions,
+    persona,
+    operations,
+  }
+
+  try {
+    return await requestChatReply(payload)
+  } catch (err) {
+    if (err instanceof Error && err.message.startsWith('Too many requests')) {
+      throw err
+    }
+    return await requestChatReply(payload)
+  }
 }
