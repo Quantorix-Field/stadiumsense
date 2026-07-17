@@ -5,7 +5,6 @@
 Built for **Google PromptWars Virtual (Hack2Skill) — Challenge 4: Smart Stadiums & Tournament Operations**
 
 🔗 **Live app:** https://stadiumsense-eta.vercel.app/
-
 🔗 **Repository:** https://github.com/Quantorix-Field/stadiumsense.git
 
 ---
@@ -25,7 +24,7 @@ This vertical was chosen because it naturally combines six of the challenge's co
 - **Sustainability** — practical, actionable tips encouraging lower-impact travel choices
 - **Multilingual assistance** — a GenAI chat assistant that answers in the fan's chosen language
 
-Rather than building a broad but shallow operations dashboard, this focus allows the solution to be judged end-to-end by a single, realistic user journey: _"How do I get to the stadium, and once I'm there, which gate should I use?"_
+Rather than building a broad but shallow operations dashboard, this focus allows the solution to be judged end-to-end by a single, realistic user journey: *"How do I get to the stadium, and once I'm there, which gate should I use?"*
 
 ---
 
@@ -46,11 +45,10 @@ A second design principle was **security by default**. The Gemini API key never 
 ## How the Solution Works
 
 **User flow:**
-
 1. A fan opens the app and sees five stadium gates ranked by current conditions, refreshed automatically every 15 seconds, alongside ranked transportation options and sustainability tips for getting to the venue.
 2. They can toggle "Wheelchair-accessible only" to instantly filter to accessible entrances.
 3. They can switch the assistant's language (English, Spanish, Portuguese, French, Arabic, Hindi) from a dropdown.
-4. They ask a natural-language question — e.g. _"Which gate should I avoid right now?"_, _"How can I get to the stadium sustainably?"_, or _"मुझे कौन सा गेट लेना चाहिए"_.
+4. They ask a natural-language question — e.g. *"Which gate should I avoid right now?"*, *"How can I get to the stadium sustainably?"*, or *"मुझे कौन सा गेट लेना चाहिए"*.
 5. The question, along with the live gate data, transport options, and selected language, is sent to `/api/chat`.
 6. The serverless function builds a grounded prompt, calls the Gemini API (`gemini-flash-latest`), cleans the response, and returns a short, direct, plain-text answer in the requested language.
 7. The fan sees a specific, accurate answer — naming real gates, wait times, or transit options — not a generic response.
@@ -76,7 +74,6 @@ tests/                → Vitest + Testing Library coverage for all
 ```
 
 **Key engineering decisions:**
-
 - **Full TypeScript** across the frontend, backend function, and Vite config, with `tsc --noEmit` enforced in CI.
 - **Custom hooks** (`useChat`, `useCrowdData`, `useLanguage`) separate state logic from presentation, keeping components simple and testable.
 - **ErrorBoundary** wraps the entire app so a runtime error shows a recoverable fallback instead of a blank screen — important for a tool used on a stadium floor.
@@ -124,4 +121,4 @@ A `GEMINI_API_KEY` environment variable is required for the chat assistant to fu
 
 ---
 
-_Built for PromptWars Virtual — Challenge 4: Smart Stadiums & Tournament Operations._
+*Built for PromptWars Virtual — Challenge 4: Smart Stadiums & Tournament Operations.*
