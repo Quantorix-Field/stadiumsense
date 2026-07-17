@@ -5,6 +5,7 @@
 Built for **Google PromptWars Virtual (Hack2Skill) — Challenge 4: Smart Stadiums & Tournament Operations**
 
 🔗 **Live app:** https://stadiumsense-eta.vercel.app/
+
 🔗 **Repository:** https://github.com/Quantorix-Field/stadiumsense.git
 
 ---
