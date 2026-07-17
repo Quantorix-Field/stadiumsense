@@ -11,7 +11,7 @@ describe('sendChatMessage', () => {
   })
 
   it('returns the reply on a successful first attempt', async () => {
-    ;(fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ reply: 'Gate A is best.' }),
     })
@@ -22,7 +22,7 @@ describe('sendChatMessage', () => {
   })
 
   it('retries once after a failure and succeeds on the second attempt', async () => {
-    ;(fetch as ReturnType<typeof vi.fn>)
+    (fetch as ReturnType<typeof vi.fn>)
       .mockResolvedValueOnce({ ok: false, status: 504 })
       .mockResolvedValueOnce({
         ok: true,
@@ -35,7 +35,7 @@ describe('sendChatMessage', () => {
   })
 
   it('throws an error if both attempts fail', async () => {
-    ;(fetch as ReturnType<typeof vi.fn>)
+    (fetch as ReturnType<typeof vi.fn>)
       .mockResolvedValueOnce({ ok: false, status: 500 })
       .mockResolvedValueOnce({ ok: false, status: 500 })
 
@@ -46,7 +46,7 @@ describe('sendChatMessage', () => {
   })
 
   it('does not retry when rate-limited', async () => {
-    ;(fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({ ok: false, status: 429 })
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({ ok: false, status: 429 })
 
     await expect(sendChatMessage('test', 'en', [])).rejects.toThrow('Too many requests')
     expect(fetch).toHaveBeenCalledTimes(1)
