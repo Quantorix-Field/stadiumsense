@@ -184,7 +184,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             ],
           },
           generationConfig: {
-            maxOutputTokens: 700,
+            maxOutputTokens: 400,
             temperature: 0.7,
             thinkingConfig: {
               thinkingBudget: 0,
