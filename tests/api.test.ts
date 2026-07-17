@@ -24,12 +24,10 @@ describe('sendChatMessage', () => {
 
   it('retries once after a failure and succeeds on the second attempt', async () => {
     const mockFetch = fetch as ReturnType<typeof vi.fn>
-    mockFetch
-      .mockResolvedValueOnce({ ok: false, status: 504 })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ reply: 'Gate B is best.' }),
-      })
+    mockFetch.mockResolvedValueOnce({ ok: false, status: 504 }).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ reply: 'Gate B is best.' }),
+    })
 
     const reply = await sendChatMessage('test', 'en', [])
     expect(reply).toBe('Gate B is best.')
